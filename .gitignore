@@ -1,0 +1,12 @@
+code-server.env
+acme.env
+
+/saves/acme/
+/saves/certs/
+/saves/html/
+/saves/vhost/
+/saves/coder/*
+!/saves/coder/.keep
+
+/projects/*
+!/projects/.keep

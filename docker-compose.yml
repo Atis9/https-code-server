@@ -1,0 +1,35 @@
+version: "2"
+services:
+  code:
+    image: codercom/code-server
+    restart: always
+    env_file:
+      - code-server.env
+    ports:
+      - 8080:8080
+    volumes:
+      - ./saves/coder:/home/coder/
+      - ./projects:/projects
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./saves/certs:/etc/nginx/certs
+      - ./saves/vhost:/etc/nginx/vhost.d
+      - ./saves/html:/usr/share/nginx/html
+
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    restart: always
+    env_file:
+      - code-server.env
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./saves/acme:/etc/acme.sh
